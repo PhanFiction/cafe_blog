@@ -3,10 +3,10 @@ const app = express();
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
-const config = require('../config/config');
+const config = require('../config/index');
+const { Client } = require('pg');
 const authRoutes = require('../routes/authRoutes');
-const pinRoutes = require('../routes/pinRoutes');
-const mongoose = require('mongoose');
+const blogRoutes = require('../routes/blogRoutes');
 
 app.use(cookieParser());
 
@@ -19,17 +19,22 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 app.use(bodyParser.json({ limit:'50mb' })); // set limit to 50mb for body 
-app.use(bodyParser.urlencoded({ extended:true, limit:'50mb' })); 
+app.use(bodyParser.urlencoded({ extended:true, limit:'50mb' }));
 
 // connect to database
-mongoose.connect(config.databaseURL)
-  .then(() => console.log('Connected to database'));
-  
+const dbClient = new Client({
+  connectionString: config.databaseURL,
+});
+
+dbClient.connect()
+  .then(() => console.log('Connected to database'))
+  .catch(err => console.error('Database connection error', err.stack));
+
 app.use(express.json()); // parse JSON bodies
 
 // routes
 app.use('/auth', authRoutes);
-app.use('/pins', pinRoutes);
+app.use('/blogs', blogRoutes);
 app.get('/', (req, res) => {
   res.send('Cafe Blog API');
 });
