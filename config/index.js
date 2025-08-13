@@ -7,7 +7,7 @@ const databaseURL = NODE_ENV === 'test' ? PSQL_TEST : PSQL;
 cloudinaryService.config({ 
   cloud_name: CLOUD_NAME, 
   api_key: CLOUD_API_KEY,
-  api_secret: CLOUD_API_SECRET 
+  api_secret: CLOUD_API_SECRET
 });
 
 module.exports = {
