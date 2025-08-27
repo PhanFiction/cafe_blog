@@ -12,7 +12,7 @@ router.post('/login', passport.authenticate('local', {
 router.post('/signup', authController.signUp);
 router.put('/user', middleware.extractToken, userController.updateUserInfo);
 router.get('/user', middleware.extractToken, userController.getUser);
-router.get('/authentication', authController.checkAuthentication);
+router.get('/check_authentication', authController.checkAuthentication);
 router.get('/logout', authController.logout);
 
 module.exports = router;
