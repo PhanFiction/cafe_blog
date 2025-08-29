@@ -2,7 +2,6 @@ const pool = require('./pool');
 const bcrypt = require('bcrypt');
 
 exports.createUser = async (userData) => {
-  console.log('user data ', userData);
   const { username, name, email, password } = userData;
   const hashedPassword = await bcrypt.hash(password, 10);
   const { rows } = await pool.query(
