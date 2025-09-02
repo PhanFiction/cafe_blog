@@ -16,12 +16,17 @@ const transformation = {
  * @returns {Object} - The result of the Cloudinary upload operation.
  */
 exports.uploadBlogImg = async (imgURL) => {
-  const imgResult = await config.cloudinaryService.uploader.upload(imgURL, {
-    folder: '/cafeBlog/posts',
-    transformation,
-  });
-  return imgResult;
-}
+  try {
+    const imgResult = await config.cloudinary.uploader.upload(imgURL, {
+      folder: '/cafeBlog/posts',
+      transformation,
+    });
+    return imgResult;
+  } catch (err) {
+    console.error("Cloudinary upload failed:", err);
+    throw err;
+  }
+};
 
 /**
  * Uploads an image to Cloudinary with an optional folder path.
@@ -32,7 +37,7 @@ exports.uploadBlogImg = async (imgURL) => {
  * @returns {Object} - The result of the Cloudinary upload operation.
  */
 exports.uploadProfileImg = async (imgURL) => {
-  const imgResult = await config.cloudinaryService.uploader.upload(imgURL, {
+  const imgResult = await config.cloudinary.uploader.upload(imgURL, {
     folder: '/cafeBlog/profile',
     transformation,
   });
@@ -41,5 +46,5 @@ exports.uploadProfileImg = async (imgURL) => {
 
 exports.deleteImg = async(imgId, folderName) => {
   const folderPath = folderName === 'profile' ? profilePath: blogPath;
-  await config.cloudinaryService.uploader.destroy(`${folderPath}/${imgId}`);
+  await config.cloudinary.uploader.destroy(`${folderPath}/${imgId}`);
 }
