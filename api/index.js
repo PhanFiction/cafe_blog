@@ -5,8 +5,12 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const config = require('../config/index');
 const { Client } = require('pg');
+const passport = require('passport');
+const flash = require('connect-flash');
+const session = require('express-session');
 const authRoutes = require('../routes/authRoutes');
 const blogRoutes = require('../routes/blogRoutes');
+require('../config/passport'); // Ensure passport config is loaded
 
 app.use(cookieParser());
 
@@ -21,21 +25,29 @@ app.use(cors(corsOptions));
 app.use(bodyParser.json({ limit:'50mb' })); // set limit to 50mb for body 
 app.use(bodyParser.urlencoded({ extended:true, limit:'50mb' }));
 
-// connect to database
+// Create new database client
 const dbClient = new Client({
-  connectionString: config.databaseURL,
+  connectionString: config.databaseURL
 });
 
+// Connect to database
 dbClient.connect()
   .then(() => console.log('Connected to database'))
   .catch(err => console.error('Database connection error', err.stack));
 
 app.use(express.json()); // parse JSON bodies
 
+app.use(session({ secret: "cats", resave: false, saveUninitialized: false }));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(express.urlencoded({ extended: false }));
+app.use(flash());
+
+
 // routes
 app.use('/auth', authRoutes);
 app.use('/blogs', blogRoutes);
-app.get('/', (req, res) => {
+app.get('/', (_, res) => {
   res.send('Cafe Blog API');
 });
 
