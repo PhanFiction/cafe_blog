@@ -1,4 +1,5 @@
 const pool = require('./pool');
+const cloudinaryService = require('../utils/cloudinaryService');
 
 exports.fetchBlogs = async () => {
   const { rows } = await pool.query("SELECT * FROM blogs");
@@ -10,11 +11,12 @@ exports.fetchBlogById = async (id) => {
   return rows[0];
 };
 
-exports.createBlog = async (blogData) => {
-  const { title, content, img, user_id } = blogData;
+exports.createBlog = async (blogData, userId) => {
+  const { title, content, img } = blogData;
+  const { secure_url } = await cloudinaryService.uploadBlogImg(img);
   const { rows } = await pool.query(
     "INSERT INTO blogs (title, content, img, user_id) VALUES ($1, $2, $3, $4) RETURNING *",
-    [title, content, img, user_id]
+    [title, content, secure_url, userId]
   );
   return rows[0];
 };
