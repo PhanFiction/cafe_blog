@@ -5,7 +5,7 @@ exports.logout = (req, res, next) => {
     if (err) { return next(err); }
     req.session.destroy((err) => {
       if (err) return next(err);
-      res.clearCookie('connect.sid'); // 👈 removes cookie from browser
+      res.clearCookie('connect.sid'); // removes cookie from browser
       res.json({ success: true, message: "Successfully logged out" });
     });
   });
