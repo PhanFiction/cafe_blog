@@ -28,6 +28,14 @@ exports.uploadBlogImg = async (imgURL) => {
   }
 };
 
+exports.uploadRecipeImg = async (imgURL) => {
+  const imgResult = await config.cloudinary.uploader.upload(imgURL, {
+    folder: '/cafeBlog/recipes',
+    transformation,
+  });
+  return imgResult;
+}
+
 /**
  * Uploads an image to Cloudinary with an optional folder path.
  * 
