@@ -1,5 +1,7 @@
+// Controller to handle recipe-related operations
 const db = require("../db/recipeDB");
 
+// Get all recipes from the database
 exports.getAllRecipes = async (req, res) => {
   try {
     const recipes = await db.fetchRecipes();
@@ -9,6 +11,7 @@ exports.getAllRecipes = async (req, res) => {
   }
 }
 
+// Get a single recipe by its ID
 exports.getRecipeById = async (req, res) => {
   const { id } = req.params;
   try {
@@ -23,6 +26,7 @@ exports.getRecipeById = async (req, res) => {
   }
 }
 
+// Create a new recipe
 exports.createRecipe = async (req, res) => {
   try {
     const recipeData = req.body;
@@ -35,6 +39,7 @@ exports.createRecipe = async (req, res) => {
   }
 }
 
+// Update an existing recipe
 exports.updateRecipe = async (req, res) => {
   const { id } = req.params;
   const recipeData = req.body;
@@ -50,6 +55,7 @@ exports.updateRecipe = async (req, res) => {
   }
 }
 
+// Delete a recipe by its ID
 exports.deleteRecipe = async (req, res) => {
   const { id } = req.params;
   try {
