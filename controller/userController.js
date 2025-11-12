@@ -1,5 +1,6 @@
 const userDB = require('../db/userDB');
 
+// Update user information
 exports.updateUserInfo = async (req, res) => {
   const userId = req.params.id;
   const userInfo = req.body;
@@ -16,6 +17,7 @@ exports.updateUserInfo = async (req, res) => {
   }
 };
 
+// Get user information by ID
 exports.getUser = async (req, res) => {
   const userId = req.params.id;
 
