@@ -2,6 +2,7 @@ const blogController = require('../controller/blogController');
 const middleware = require('../middleware/index');
 const router = require('express').Router();
 
+// Routes for blog operations
 router.post('/create', (middleware.checkAuth, middleware.checkBlogOwnerShip), blogController.createBlog);
 router.put('/update/:id', (middleware.checkAuth, middleware.checkBlogOwnerShip), blogController.updateBlog);
 router.delete('/delete/:id', (middleware.checkAuth, middleware.checkBlogOwnerShip), blogController.deleteBlog);
