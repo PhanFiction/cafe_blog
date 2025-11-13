@@ -1,8 +1,8 @@
 const pool = require('./pool');
 const cloudinaryService = require('../utils/cloudinaryService');
 
-exports.fetchRecipes = async () => {
-  const { rows } = await pool.quert("SELECT * FROM recipes");
+exports.fetchAllRecipes = async () => {
+  const { rows } = await pool.query("SELECT * FROM recipes");
   return rows;
 }
 
@@ -44,4 +44,3 @@ exports.deleteRecipe = async (id) => {
   const { rows } = await pool.query("DELETE FROM recipes WHERE id = $1 RETURNING *", [id]);
   return rows[0];
 }
-
