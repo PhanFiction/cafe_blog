@@ -1,5 +1,6 @@
 const db = require('../db/blogDB');
 
+// Controller to handle blog-related requests
 exports.getAllBlogs = async (req, res) => {
   try {
     const blogs = await db.fetchBlogs();
@@ -10,6 +11,7 @@ exports.getAllBlogs = async (req, res) => {
   }
 }
 
+// Fetch a single blog by ID
 exports.getBlogById = async (req, res) => {
   const { id } = req.params;
   try {
@@ -24,6 +26,7 @@ exports.getBlogById = async (req, res) => {
   }
 }
 
+// Create a new blog
 exports.createBlog = async (req, res) => {
   try {
       const blogData = req.body;
@@ -36,6 +39,7 @@ exports.createBlog = async (req, res) => {
   }
 }
 
+// Update an existing blog
 exports.updateBlog = async (req, res) => {
   const { id } = req.params;
   const blogData = req.body;
@@ -51,6 +55,7 @@ exports.updateBlog = async (req, res) => {
   }
 }
 
+// Delete a blog
 exports.deleteBlog = async (req, res) => {
   const { id } = req.params;
   try {
