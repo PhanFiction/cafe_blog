@@ -1,16 +1,19 @@
 const pool = require('./pool');
 const cloudinaryService = require('../utils/cloudinaryService');
 
+// Fetch all recipes from the database
 exports.fetchAllRecipes = async () => {
   const { rows } = await pool.query("SELECT * FROM recipes");
   return rows;
 }
 
+// Fetch a single recipe by its ID in the database
 exports.fetchSingleRecipe = async (id) => {
   const { rows } = await pool.query("SELECT * FROM recipes WHERE id = ${1}", [id]);
   return rows[0];
 }
 
+// Create a new recipe in the database
 exports.createRecipe = async (recipeData, userId) => {
   const { title, ingredients, description, img } = recipeData;
   const { secure_url } = await cloudinaryService.uploadRecipeImg(img);
@@ -21,6 +24,7 @@ exports.createRecipe = async (recipeData, userId) => {
   return rows[0];
 }
 
+// Update an existing recipe in the database
 exports.updateRecipe = async (id, recipeData) => {
   const { title, ingredients, description, img } = recipeData;
   let updatedImgUrl = null;
@@ -40,6 +44,7 @@ exports.updateRecipe = async (id, recipeData) => {
   return rows[0];
 }
 
+// Delete a recipe from the database
 exports.deleteRecipe = async (id) => {
   const { rows } = await pool.query("DELETE FROM recipes WHERE id = $1 RETURNING *", [id]);
   return rows[0];
