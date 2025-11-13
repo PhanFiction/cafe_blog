@@ -1,16 +1,19 @@
 const pool = require('./pool');
 const cloudinaryService = require('../utils/cloudinaryService');
 
+// Fetch all blogs from the database
 exports.fetchBlogs = async () => {
   const { rows } = await pool.query("SELECT * FROM blogs");
   return rows;
 };
 
+// Fetch a single blog by ID in the database
 exports.fetchBlogById = async (id) => {
   const { rows } = await pool.query("SELECT * FROM blogs WHERE id = $1", [id]);
   return rows[0];
 };
 
+// Create a new blog in the database
 exports.createBlog = async (blogData, userId) => {
   const { title, content, img } = blogData;
   const { secure_url } = await cloudinaryService.uploadBlogImg(img);
@@ -21,6 +24,7 @@ exports.createBlog = async (blogData, userId) => {
   return rows[0];
 };
 
+// Update an existing blog in the database
 exports.updateBlog = async (id, blogData) => {
   const { title, content, img } = blogData;
   const { rows } = await pool.query(
@@ -30,6 +34,7 @@ exports.updateBlog = async (id, blogData) => {
   return rows[0];
 };
 
+// Delete a blog from the database
 exports.deleteBlog = async (id) => {
   const { rows } = await pool.query("DELETE FROM blogs WHERE id = $1 RETURNING *", [id]);
   return rows[0];
