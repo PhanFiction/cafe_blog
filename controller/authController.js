@@ -1,5 +1,6 @@
 const userDB = require('../db/userDB');
 
+// Logout user and destroy session
 exports.logout = (req, res, next) => {
   req.logout(function(err) {
     if (err) { return next(err); }
@@ -11,6 +12,7 @@ exports.logout = (req, res, next) => {
   });
 };
 
+// Sign up a new user
 exports.signUp = async (req, res) => {
   try {
     const user = await userDB.createUser(req.body);
@@ -20,6 +22,7 @@ exports.signUp = async (req, res) => {
   }
 }
 
+// Check if user is authenticated
 exports.checkAuthentication = (req, res) => {
   req.userId = req['user'].id;
   if (req.isAuthenticated()) {
