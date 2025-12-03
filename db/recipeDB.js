@@ -18,8 +18,8 @@ exports.createRecipe = async (recipeData, userId) => {
   const { title, ingredients, description, img } = recipeData;
   const { secure_url } = await cloudinaryService.uploadRecipeImg(img);
   const { rows } = await pool.query(
-    "INSERT INTO recipes (title, ingredients, description, img, user_id) VALUES ($1, $2, $3, $4, $5) RETURNING *",
-    [title, ingredients, description, secure_url, userId]
+    "INSERT INTO recipes (title, ingredients, steps, description, img, user_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
+    [title, ingredients, steps, description, secure_url, userId]
   );
   return rows[0];
 }
