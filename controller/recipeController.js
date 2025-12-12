@@ -1,5 +1,5 @@
 // Controller to handle recipe-related operations
-const db = require("../db/recipeDB");
+const db = require('../db/recipeDB');
 
 // Get all recipes from the database
 exports.getAllRecipes = async (req, res) => {
