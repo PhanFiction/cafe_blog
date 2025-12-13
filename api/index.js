@@ -10,6 +10,7 @@ const flash = require('connect-flash');
 const session = require('express-session');
 const authRoutes = require('../routes/authRoutes');
 const blogRoutes = require('../routes/blogRoutes');
+const recipeRoutes = require('../routes/recipeRoutes');
 require('../config/passport'); // Ensure passport config is loaded
 
 app.use(cookieParser());
@@ -47,6 +48,7 @@ app.use(flash());
 // routes
 app.use('/auth', authRoutes);
 app.use('/blogs', blogRoutes);
+app.use('/recipes', recipeRoutes);
 app.get('/', (_, res) => {
   res.send('Cafe Blog API');
 });
