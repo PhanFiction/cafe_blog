@@ -9,7 +9,7 @@ exports.fetchAllRecipes = async () => {
 
 // Fetch a single recipe by its ID in the database
 exports.fetchSingleRecipe = async (id) => {
-  const { rows } = await pool.query("SELECT * FROM recipes WHERE id = ${1}", [id]);
+  const { rows } = await pool.query("SELECT * FROM recipes WHERE id = $1", [id]);
   return rows[0];
 }
 
