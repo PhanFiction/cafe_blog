@@ -29,7 +29,7 @@ exports.getBlogById = async (req, res) => {
 // Create a new blog
 exports.createBlog = async (req, res) => {
   try {
-      const blogData = req.body;
+    const blogData = req.body;
     // fetch user id from cookie
     req.userId = req['user'].id;
     const newBlog = await db.createBlog(blogData, req.userId);
