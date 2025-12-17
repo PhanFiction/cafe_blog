@@ -1,6 +1,13 @@
 // Extract token from the request and verify it
 const verifyToken = require('../utils/verifyToken');
 const blogDB = require('../db/blogDB');
+const recipeDB = require('../db/recipeDB');
+
+exports.checkAuthorization = (req, res, next) => {
+  if (!req.authorized) return res.status(401).json({ error: 'Not authorized' });
+
+  next();
+}
 
 exports.extractToken = (req, res, next) => {
   const cookie = req.headers.cookie.split(';')[0].split("authToken=")[1];
@@ -23,7 +30,6 @@ exports.checkBlogOwnerShip = async (req, res, next) => {
 
   if (foundBlog.user_id !== userId) return res.status(403).json({ error: 'Forbidden' });
 
-  console.log(foundBlog);
   next();
 };
 
@@ -32,11 +38,10 @@ exports.checkRecipeOwnership = async (req, res, next) => {
   const recipeId = req.params.id;
   const userId = req.userId;
 
-  const foundRecipe = await recipeDB.fetchRecipeById(recipeId);
+  const foundRecipe = await recipeDB.fetchSingleRecipe(recipeId);
 
   if (foundRecipe.user_id !== userId) return res.status(403).json({ error: 'Forbidden' });
 
-  console.log(foundRecipe);
   next();
 };
 
