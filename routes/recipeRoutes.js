@@ -4,7 +4,8 @@ const router = require('express').Router();
 
 // Routes for recipe operations
 router.get('/', recipeController.getAllRecipes);
-router.post('/create', middleware.extractToken, recipeController.createRecipe);
+router.get('/:id', recipeController.getRecipeById);
+router.post('/create', recipeController.createRecipe);
 router.put('/:id', middleware.validateRecipe, middleware.checkRecipeOwnership, recipeController.updateRecipe);
 router.delete('/:id', middleware.checkRecipeOwnership, recipeController.deleteRecipe);
 
