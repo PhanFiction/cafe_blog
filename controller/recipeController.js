@@ -4,7 +4,7 @@ const db = require('../db/recipeDB');
 // Get all recipes from the database
 exports.getAllRecipes = async (req, res) => {
   try {
-    const recipes = await db.fetchRecipes();
+    const recipes = await db.fetchAllRecipes();
     res.status(200).json(recipes);
   } catch (error) {
     res.status(500).json({ message: "Failed to fetch recipes" });
@@ -22,7 +22,7 @@ exports.getRecipeById = async (req, res) => {
       res.status(404).json({ message: "Recipe not found" });
     }
   } catch (error) {
-    res.status(500).json({ message: "Failed to fetch recipe" });
+    res.status(500).json({ message: error.message });
   }
 }
 
@@ -31,11 +31,11 @@ exports.createRecipe = async (req, res) => {
   try {
     const recipeData = req.body;
     // fetch user id from cookie
-    req.userId = req['user'].id;
+    req.userId = req.user.id;
     const newRecipe = await db.createRecipe(recipeData, req.userId);
     res.status(201).json(newRecipe);
   } catch (err) {
-    res.status(500).json({ message: "Failed to create recipe" });
+    res.status(500).json({ message: err.message });
   }
 }
 
