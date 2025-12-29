@@ -25,8 +25,6 @@ exports.signUp = async (req, res) => {
 // Check if user is authenticated
 exports.checkAuthentication = (req, res) => {
   req.userId = req['user'].id;
-  if (req.isAuthenticated()) {
-    return res.status(200).json({ message: "User is authenticated" });
-  }
+  if (req.isAuthenticated()) return res.status(200).json({ message: "User is authenticated" });
   res.status(401).json({ message: "User is not authenticated" });
 };
