@@ -36,3 +36,19 @@ exports.getUserById = async (id) => {
   const { rows } = await pool.query("SELECT * FROM users WHERE id = $1", [id]);
   return rows[0];
 }
+
+// create user table for database
+exports.createUserTable = async () => {
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS users (
+      id SERIAL PRIMARY KEY,
+      google_id VARCHAR(255) UNIQUE,
+      username VARCHAR(255) NOT NULL UNIQUE,
+      name VARCHAR(255) NOT NULL,
+      email VARCHAR(255) NOT NULL UNIQUE,
+      password VARCHAR(255) NOT NULL,
+      avatar_url VARCHAR(255),
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+  `);
+};
