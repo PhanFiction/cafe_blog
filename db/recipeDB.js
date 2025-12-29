@@ -49,3 +49,19 @@ exports.deleteRecipe = async (id) => {
   const { rows } = await pool.query("DELETE FROM recipes WHERE id = $1 RETURNING *", [id]);
   return rows[0];
 }
+
+// create user table for database
+exports.createRecipeTable = async () => {
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS users (
+      id SERIAL PRIMARY KEY,
+      google_id VARCHAR(255) UNIQUE,
+      username VARCHAR(255) NOT NULL UNIQUE,
+      name VARCHAR(255) NOT NULL,
+      email VARCHAR(255) NOT NULL UNIQUE,
+      password VARCHAR(255) NOT NULL,
+      avatar_url VARCHAR(255),
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+  `);
+};
