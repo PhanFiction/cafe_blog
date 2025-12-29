@@ -40,3 +40,17 @@ exports.deleteBlog = async (id) => {
   return rows[0];
 };
 
+
+exports.createBlogTable = async () => {
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS blogs (
+      id SERIAL PRIMARY KEY,
+      title VARCHAR(255) NOT NULL,
+      content TEXT NOT NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      img VARCHAR(255),
+      user_id INTEGER REFERENCES users(id) ON DELETE CASCADE
+    )
+  `);
+};
