@@ -53,15 +53,14 @@ exports.deleteRecipe = async (id) => {
 // create user table for database
 exports.createRecipeTable = async () => {
   await pool.query(`
-    CREATE TABLE IF NOT EXISTS users (
+    CREATE TABLE IF NOT EXISTS recipes (
       id SERIAL PRIMARY KEY,
-      google_id VARCHAR(255) UNIQUE,
-      username VARCHAR(255) NOT NULL UNIQUE,
-      name VARCHAR(255) NOT NULL,
-      email VARCHAR(255) NOT NULL UNIQUE,
-      password VARCHAR(255) NOT NULL,
-      avatar_url VARCHAR(255),
-      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      title VARCHAR(255) NOT NULL,
+      ingredients TEXT[] NOT NULL,
+      steps TEXT[] NOT NULL,
+      description TEXT NOT NULL,
+      img VARCHAR(255),
+      user_id INT REFERENCES users(id) ON DELETE CASCADE
     );
   `);
-};
+}
