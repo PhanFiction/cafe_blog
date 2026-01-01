@@ -10,26 +10,20 @@ exports.createUser = async (userData) => {
     [username, name, email, hashedPassword]
   );
   return rows[0];
-};
+}
 
 // Update an existing user in the database
 exports.updateUser = async (id, userData) => {
   const { username, name, email, avatar_url, password } = userData;
-  let query = "UPDATE users SET username = $1, name = $2, avatar_url = $3, email = $4 WHERE id = $5 ";
-  const values = [username, name, avatar_url, email, id];
+  let query = "UPDATE users SET username = $1, name = $2, avatar_url = $3, email = $4, password = $5 WHERE id = $6 RETURNING  *";
 
-  if (password) {
-    const hashedPassword = await bcrypt.hash(password, 10);
-    query += ", password = $4";
-    values.push(hashedPassword);
-  }
+  const hashedPassword = password ? await bcrypt.hash(password, 10) : null;
 
-  query += " WHERE id = $5 RETURNING *";
-  values.push(id);
+  const values = [username, name, avatar_url, email, hashedPassword, id];
 
   const { rows } = await pool.query(query, values);
   return rows[0];
-};
+}
 
 // Get a user by ID from the database
 exports.getUserById = async (id) => {
@@ -51,4 +45,4 @@ exports.createUserTable = async () => {
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
   `);
-};
+}
