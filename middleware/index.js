@@ -3,7 +3,7 @@ const verifyToken = require('../utils/verifyToken');
 const blogDB = require('../db/blogDB');
 const recipeDB = require('../db/recipeDB');
 
-exports.checkAuthorization = (req, res, next) => {
+exports.checkAuth = (req, res, next) => {
   if (!req.authorized) return res.status(401).json({ error: 'Not authorized' });
 
   next();
