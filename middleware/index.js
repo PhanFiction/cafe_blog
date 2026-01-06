@@ -19,7 +19,7 @@ exports.extractToken = (req, res, next) => {
   req.userId = decodedToken.id;
 
   next();
-};
+}
 
 // Checks to make sure the blog creator matches the user id of who created the blog
 exports.checkBlogOwnerShip = async (req, res, next) => {
@@ -31,7 +31,18 @@ exports.checkBlogOwnerShip = async (req, res, next) => {
   if (foundBlog.user_id !== userId) return res.status(403).json({ error: 'Forbidden' });
 
   next();
-};
+}
+
+// Checks to make sure the recipe creator matches the user id of who created the recipe
+exports.checkRecipeOwnership = async (req, res, next) => {
+  const recipeId = req.params.id;
+  const userId = req.user.id;
+  
+  const foundRecipe = await recipeDB.fetchSingleRecipe(recipeId);
+  if (foundRecipe.user_id !== userId) return res.status(403).json({ error: 'Forbidden' });
+  
+  next();
+}
 
 // Checks to make sure recipe creator matches the user id of who created the recipe
 exports.checkRecipeOwnership = async (req, res, next) => {
@@ -43,7 +54,7 @@ exports.checkRecipeOwnership = async (req, res, next) => {
   if (foundRecipe.user_id !== userId) return res.status(403).json({ error: 'Forbidden' });
 
   next();
-};
+}
 
 exports.validateRecipe = (req, res, next) => {
   const { title, ingredients, instructions, steps, description } = req.body;
@@ -53,4 +64,4 @@ exports.validateRecipe = (req, res, next) => {
   }
 
   next();
-};
+}
