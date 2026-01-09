@@ -47,11 +47,11 @@ exports.checkRecipeOwnership = async (req, res, next) => {
 // Checks to make sure recipe creator matches the user id of who created the recipe
 exports.checkRecipeOwnership = async (req, res, next) => {
   const recipeId = req.params.id;
-  const userId = req.userId;
+  const userId = req.user.id;
 
   const foundRecipe = await recipeDB.fetchSingleRecipe(recipeId);
 
-  if (foundRecipe.user_id !== userId) return res.status(403).json({ error: 'Forbidden' });
+  if (foundRecipe.user_id !== userId) return res.status(403).json({ error: foundRecipe.user_id !== userId });
 
   next();
 }
