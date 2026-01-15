@@ -1,4 +1,5 @@
 const db = require('../db/blogDB');
+const cloudinaryService = require('../utils/cloudinaryService');
 
 // Controller to handle blog-related requests
 exports.getAllBlogs = async (req, res) => {
@@ -31,7 +32,7 @@ exports.createBlog = async (req, res) => {
   try {
     const blogData = req.body;
     // fetch user id from cookie
-    req.userId = req['user'].id;
+    req.userId = req.user.id;
     const newBlog = await db.createBlog(blogData, req.userId);
     res.status(201).json(newBlog);
   } catch (err) {
@@ -59,6 +60,8 @@ exports.updateBlog = async (req, res) => {
 exports.deleteBlog = async (req, res) => {
   const { id } = req.params;
   try {
+    const foundBlog = await db.fetchBlogById(id);
+    await cloudinaryService.deleteImg(foundBlog.imagePublicId, '/cafeBlog/posts');
     const deletedBlog = await db.deleteBlog(id);
     if (deletedBlog) {
       res.status(200).json(deletedBlog);
