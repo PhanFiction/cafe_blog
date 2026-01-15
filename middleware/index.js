@@ -4,8 +4,7 @@ const blogDB = require('../db/blogDB');
 const recipeDB = require('../db/recipeDB');
 
 exports.checkAuth = (req, res, next) => {
-  if (!req.authorized) return res.status(401).json({ error: 'Not authorized' });
-
+  if (!req.isAuthenticated()) return res.status(401).json({ error: 'Not authorized' });
   next();
 }
 
@@ -15,7 +14,6 @@ exports.extractToken = (req, res, next) => {
   
   if(!decodedToken) return res.status(401).json({ error: 'Not authorized' });
 
-  req.authorized = true;
   req.userId = decodedToken.id;
 
   next();
@@ -24,7 +22,7 @@ exports.extractToken = (req, res, next) => {
 // Checks to make sure the blog creator matches the user id of who created the blog
 exports.checkBlogOwnerShip = async (req, res, next) => {
   const blogId = req.params.id;
-  const userId = req.userId;
+  const userId = req.user.id;
 
   const foundBlog = await blogDB.fetchBlogById(blogId);
 
