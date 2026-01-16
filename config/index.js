@@ -1,7 +1,7 @@
 require('dotenv').config();
 const cloudinary = require('cloudinary').v2;
 
-const { PORT, SECRET_KEY, NODE_ENV, PSQL, PSQL_TEST, CLOUDINARY_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET } = process.env;
+const { PORT, SECRET_KEY, NODE_ENV, PSQL, PSQL_TEST, CLOUDINARY_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET, SESSION_SECRET } = process.env;
 const databaseURL = NODE_ENV === 'test' ? PSQL_TEST : PSQL;
 
 cloudinary.config({ 
@@ -15,4 +15,5 @@ module.exports = {
   SECRET_KEY,
   databaseURL,
   cloudinary,
+  SESSION_SECRET
 };
