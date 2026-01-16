@@ -16,10 +16,10 @@ exports.fetchSingleRecipe = async (id) => {
 // Create a new recipe in the database
 exports.createRecipe = async (recipeData, userId) => {
   const { title, ingredients, description, steps, img } = recipeData;
-  const { secure_url } = await cloudinaryService.uploadRecipeImg(img);
+  const { secure_url, public_id } = await cloudinaryService.uploadRecipeImg(img);
   const { rows } = await pool.query(
     "INSERT INTO recipes (title, ingredients, steps, description, img, user_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
-    [title, ingredients, steps, description, secure_url, userId]
+    [title, ingredients, steps, description, { secure_url, public_id }, userId]
   );
   return rows[0];
 }
