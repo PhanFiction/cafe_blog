@@ -16,10 +16,10 @@ exports.fetchBlogById = async (id) => {
 // Create a new blog in the database
 exports.createBlog = async (blogData, userId) => {
   const { title, content, img } = blogData;
-  const { secure_url } = await cloudinaryService.uploadBlogImg(img);
+  const { secure_url, public_id } = await cloudinaryService.uploadRecipeImg(img);
   const { rows } = await pool.query(
     "INSERT INTO blogs (title, content, img, user_id) VALUES ($1, $2, $3, $4) RETURNING *",
-    [title, content, secure_url, userId]
+    [title, content, { secure_url, public_id }, userId]
   );
   return rows[0];
 };
