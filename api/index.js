@@ -38,7 +38,17 @@ dbClient.connect()
 
 app.use(express.json()); // parse JSON bodies
 
-app.use(session({ secret: "cats", resave: false, saveUninitialized: false }));
+app.use(session({
+  secret: config.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    httpOnly: true,
+    secure: false, // true only if HTTPS
+    maxAge: 1000 * 60 * 60 * 24
+  }
+}));
+
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.urlencoded({ extended: false }));
