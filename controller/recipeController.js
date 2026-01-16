@@ -1,5 +1,6 @@
 // Controller to handle recipe-related operations
 const db = require('../db/recipeDB');
+const cloudinaryService = require('../utils/cloudinaryService');
 
 // Get all recipes from the database
 exports.getAllRecipes = async (req, res) => {
@@ -59,13 +60,17 @@ exports.updateRecipe = async (req, res) => {
 exports.deleteRecipe = async (req, res) => {
   const { id } = req.params;
   try {
+    const foundRecipe = await db.fetchSingleRecipe(id);
+    const imgObj = foundRecipe;
+    await cloudinaryService.deleteImg(imgObj.img.public_id);
     const deletedRecipe = await db.deleteRecipe(id);
+    
     if (deletedRecipe) {
       res.status(200).json(deletedRecipe);
     } else {
       res.status(404).json({ message: "Recipe not found" });
     }
   } catch (error) {
-    res.status(500).json({ message: "Failed to delete recipe" });
+    res.status(500).json({ message: error.message });
   }
 }
