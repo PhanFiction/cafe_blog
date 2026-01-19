@@ -74,4 +74,32 @@ describe("Blog API test", () => {
     expect(res.body).to.have.property('id', 1);
     expect(res.body).to.have.property('title', 'My First Blog');
   })
+
+  it("Update blog post", async () => {
+    const updatedBlogData = {
+      "title": "My Updated Blog",
+      "content": "This is the updated content of my blog post.",
+      "img": "https://coffeecopycat.com/wp-content/uploads/2024/01/MochaLatte-1200x1200-1.jpg",
+    }
+
+    const res = await request(app)
+      .put('/blogs/1')
+      .set('Cookie', cookies)
+      .send(updatedBlogData)
+      .expect(200);
+    
+    expect(res.body).to.have.property('title', 'My Updated Blog');
+    expect(res.body).to.have.property('content', 'This is the updated content of my blog post.');
+  })
+  
+  it("Delete blog post", async () => {
+    await request(app)
+      .delete('/blogs/delete/1')
+      .set('Cookie', cookies)
+      .expect(200);
+
+    await request(app)
+      .get('/blogs/1')
+      .expect(404);
+  })
 })
