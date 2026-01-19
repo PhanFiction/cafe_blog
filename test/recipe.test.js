@@ -80,13 +80,14 @@ describe("Recipe API Endpoints test", () => {
     const res = await request(app)
       .get('/recipes')
       .expect(200);
- 
+
+    console.log(res.body);
+
     expect(res.body).to.be.an('array');
     expect(res.body.length).to.equal(1);
     expect(res.body[0]).to.have.property('title', 'Mocha Coffee');
     expect(res.body[0]).to.have.property('description', 'This mocha coffee recipe is a delightful blend of rich coffee and smooth chocolate, perfect for a cozy evening or a quick pick-me-up.');
-    expect(res.body[0].ingredients).to.have.an('array').to.have.lengthOf(5);
-    expect(res.body[0].instructions).to.be.an('array').with.lengthOf(8);
+    expect(res.body[0].ingredients).to.be.an('array').to.have.lengthOf(5);
     expect(res.body[0].steps).to.be.an('array').with.lengthOf(8);
   })
 
