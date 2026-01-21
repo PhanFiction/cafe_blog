@@ -3,7 +3,7 @@ const db = require('../db/recipeDB');
 const cloudinaryService = require('../utils/cloudinaryService');
 
 // Get all recipes from the database
-exports.getAllRecipes = async (req, res) => {
+exports.getAllRecipes = async (_, res) => {
   try {
     const recipes = await db.fetchAllRecipes();
     res.status(200).json(recipes);
@@ -45,6 +45,10 @@ exports.updateRecipe = async (req, res) => {
   const { id } = req.params;
   const recipeData = req.body;
   try {
+    const foundRecipe = await db.fetchSingleRecipe(id);
+    const imgObj = JSON.parse(foundRecipe.img);
+    // Delete old image from cloudinary
+    await cloudinaryService.deleteImg(imgObj.public_id);
     const updatedRecipe = await db.updateRecipe(id, recipeData);
     if (updatedRecipe) {
       res.status(200).json(updatedRecipe);
@@ -61,8 +65,9 @@ exports.deleteRecipe = async (req, res) => {
   const { id } = req.params;
   try {
     const foundRecipe = await db.fetchSingleRecipe(id);
-    const imgObj = foundRecipe;
-    await cloudinaryService.deleteImg(imgObj.img.public_id);
+    const imgObj = JSON.parse(foundRecipe.img);
+    // Delete old image from cloudinary
+    await cloudinaryService.deleteImg(imgObj.public_id);
     const deletedRecipe = await db.deleteRecipe(id);
     
     if (deletedRecipe) {
