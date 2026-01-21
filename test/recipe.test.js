@@ -81,8 +81,6 @@ describe("Recipe API Endpoints test", () => {
       .get('/recipes')
       .expect(200);
 
-    console.log(res.body);
-
     expect(res.body).to.be.an('array');
     expect(res.body.length).to.equal(1);
     expect(res.body[0]).to.have.property('title', 'Mocha Coffee');
