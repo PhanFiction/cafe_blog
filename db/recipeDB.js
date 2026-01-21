@@ -27,19 +27,16 @@ exports.createRecipe = async (recipeData, userId) => {
 // Update an existing recipe in the database
 exports.updateRecipe = async (id, recipeData) => {
   const { title, ingredients, description, img } = recipeData;
-  let updatedImgUrl = null;
-
-  if (img) {
-    const { secure_url } = await cloudinaryService.uploadRecipeImg(img);
-    updatedImgUrl = secure_url;
-  }
-
+  const foundRecipe = await this.fetchSingleRecipe(id);
+  const { secure_url, public_id } = await cloudinaryService.uploadBlogImg(img);
+  // Delete old image from cloudinary
+  await cloudinaryService.deleteImg(foundRecipe.img.public_id);
   const { rows } = await pool.query(
     `UPDATE recipes 
-     SET title = $1, ingredients = $2, description = $3, img = COALESCE($4, img) 
+     SET title = $1, ingredients = $2, description = $3, img = $4 
      WHERE id = $5 
      RETURNING *`,
-    [title, ingredients, description, updatedImgUrl, id]
+    [title, ingredients, description, { secure_url, public_id }, id]
   );
   return rows[0];
 }
