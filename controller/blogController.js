@@ -31,7 +31,6 @@ exports.getBlogById = async (req, res) => {
 exports.createBlog = async (req, res) => {
   try {
     const blogData = req.body;
-    // fetch user id from cookie
     req.userId = req.user.id;
     const newBlog = await db.createBlog(blogData, req.userId);
     res.status(201).json(newBlog);
@@ -45,6 +44,10 @@ exports.updateBlog = async (req, res) => {
   const { id } = req.params;
   const blogData = req.body;
   try {
+    const foundBlog = await db.fetchBlogById(id);
+    const imgObj = JSON.parse(foundBlog.img);
+    // Delete old image from cloudinary
+    await cloudinaryService.deleteImg(imgObj.public_id);
     const updatedBlog = await db.updateBlog(id, blogData);
     if (updatedBlog) {
       res.status(200).json(updatedBlog);
@@ -61,7 +64,9 @@ exports.deleteBlog = async (req, res) => {
   const { id } = req.params;
   try {
     const foundBlog = await db.fetchBlogById(id);
-    await cloudinaryService.deleteImg(foundBlog.imagePublicId, '/cafeBlog/posts');
+    const imgObj = JSON.parse(foundBlog.img);
+    // Delete old image from cloudinary
+    await cloudinaryService.deleteImg(imgObj.public_id);
     const deletedBlog = await db.deleteBlog(id);
     if (deletedBlog) {
       res.status(200).json(deletedBlog);
