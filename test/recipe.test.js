@@ -34,7 +34,7 @@ before(async () => {
     .expect(200);
 
   cookies = response.headers['set-cookie'];
-});
+})
 
 describe("Recipe API Endpoints test", () => {
   it("Create recipe", async () => {
