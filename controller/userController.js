@@ -19,7 +19,11 @@ exports.updateUserInfo = async (req, res) => {
 
 // Get user information by ID
 exports.getUser = async (req, res) => {
-  const userId = req.params.id;
+  const userId = req.user.id;
+
+  if (!userId) {
+    return res.status(400).json({ message: 'User ID is required' });
+  }
 
   try {
     const user = await userDB.getUserById(userId);
