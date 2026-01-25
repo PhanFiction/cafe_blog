@@ -1,9 +1,20 @@
 const userDB = require('../db/userDB');
+const cloudinaryService = require('../utils/cloudinaryService');
 
 // Update user information
 exports.updateUserInfo = async (req, res) => {
   const userID = req.user.id;
   const userInfo = req.body;
+
+  // Delete image from the database
+  if (userInfo.img != null && userInfo.img === '') {
+    const foundUser = await userDB.getUserById(userID);
+    if (foundUser && foundUser.imgPublicId) {
+      await cloudinaryService.deleteImg(foundUser.imgPublicId);
+    }
+    userInfo.img = null;
+    userInfo.imgPublicId = null;
+  }
 
   try {
     const updatedUser = await userDB.updateUser(userID, userInfo);
@@ -15,7 +26,7 @@ exports.updateUserInfo = async (req, res) => {
     console.error('Error updating user info:', error);
     res.status(500).json({ message: error.message || 'Internal server error' });
   }
-};
+}
 
 // Get user information by ID
 exports.getUser = async (req, res) => {
@@ -35,4 +46,4 @@ exports.getUser = async (req, res) => {
     console.error('Error fetching user:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
-};
+}
