@@ -29,11 +29,16 @@ exports.uploadBlogImg = async (imgURL) => {
 };
 
 exports.uploadRecipeImg = async (imgURL) => {
-  const imgResult = await config.cloudinary.uploader.upload(imgURL, {
-    folder: '/cafeBlog/recipes',
-    transformation,
-  });
-  return imgResult;
+  try {
+    const imgResult = await config.cloudinary.uploader.upload(imgURL, {
+      folder: '/cafeBlog/recipes',
+      transformation,
+    });
+    return imgResult;
+  } catch (err) {
+    console.error("Cloudinary upload failed:", err);
+    throw err;
+  }
 }
 
 /**
@@ -52,7 +57,9 @@ exports.uploadProfileImg = async (imgURL) => {
   return imgResult;
 }
 
-exports.deleteImg = async(imgId, folderName) => {
-  const folderPath = folderName === 'profile' ? profilePath: blogPath;
-  await config.cloudinary.uploader.destroy(`${folderPath}/${imgId}`);
+/* 
+  * Deletes an image from Cloudinary by its public ID. 
+*/
+exports.deleteImg = async(imgId) => {
+  await config.cloudinary.uploader.destroy(`${imgId}`);
 }
