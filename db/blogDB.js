@@ -16,7 +16,7 @@ exports.fetchBlogById = async (id) => {
 // Create a new blog in the database
 exports.createBlog = async (blogData, userId) => {
   const { title, content, img } = blogData;
-  const { secure_url, public_id } = await cloudinaryService.uploadRecipeImg(img);
+  const { secure_url, public_id } = await cloudinaryService.uploadBlogImg(img);
   const { rows } = await pool.query(
     "INSERT INTO blogs (title, content, img, user_id) VALUES ($1, $2, $3, $4) RETURNING *",
     [title, content, { secure_url, public_id }, userId]
@@ -27,9 +27,14 @@ exports.createBlog = async (blogData, userId) => {
 // Update an existing blog in the database
 exports.updateBlog = async (id, blogData) => {
   const { title, content, img } = blogData;
+  const { secure_url, public_id } = await cloudinaryService.uploadBlogImg(img);
+  const foundBlog = await this.fetchBlogById(id);
+  const imgObj = JSON.parse(foundBlog.img);
+  // Delete old image from cloudinary
+  await cloudinaryService.deleteImg(imgObj.public_id);
   const { rows } = await pool.query(
     "UPDATE blogs SET title = $1, content = $2, img = $3 WHERE id = $4 RETURNING *",
-    [title, content, img, id]
+    [title, content, { secure_url, public_id }, id]
   );
   return rows[0];
 };
