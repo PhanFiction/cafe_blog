@@ -36,40 +36,41 @@ before(async () => {
   cookies = response.headers['set-cookie'];
 })
 
+const recipeData = {
+  "title": "Mocha Coffee",
+  "ingredients": [
+    "1 cup strong brewed coffee",
+    "1 cup milk",
+    "2 tablespoons cocoa powder",
+    "2 tablespoons sugar",
+    "Whipped cream (optional)"
+  ],
+  "instructions": [
+    "Brew a cup of strong coffee using your preferred method.",
+    "In a small saucepan, heat the milk over medium heat until hot but not boiling.",
+    "In a separate bowl, mix the cocoa powder and sugar together.",
+    "Add the cocoa mixture to the hot milk and stir until fully dissolved.",
+    "Pour the brewed coffee into a large mug.",
+    "Add the hot chocolate milk to the coffee and stir well.",
+    "Top with whipped cream if desired.",
+    "Serve immediately and enjoy your mocha coffee!"
+  ],
+  "steps": [
+    "Brew coffee",
+    "Heat milk",
+    "Mix cocoa and sugar",
+    "Combine cocoa mixture with milk",
+    "Pour coffee into mug",
+    "Add chocolate milk to coffee",
+    "Top with whipped cream",
+    "Serve"
+  ],
+  "img": "https://coffeecopycat.com/wp-content/uploads/2024/01/MochaLatte-1200x1200-1.jpg",
+  "description": "This mocha coffee recipe is a delightful blend of rich coffee and smooth chocolate, perfect for a cozy evening or a quick pick-me-up."
+}
+
 describe("Recipe API Endpoints test", () => {
   it("Create recipe", async () => {
-    const recipeData = {
-      "title": "Mocha Coffee",
-      "ingredients": [
-        "1 cup strong brewed coffee",
-        "1 cup milk",
-        "2 tablespoons cocoa powder",
-        "2 tablespoons sugar",
-        "Whipped cream (optional)"
-      ],
-      "instructions": [
-        "Brew a cup of strong coffee using your preferred method.",
-        "In a small saucepan, heat the milk over medium heat until hot but not boiling.",
-        "In a separate bowl, mix the cocoa powder and sugar together.",
-        "Add the cocoa mixture to the hot milk and stir until fully dissolved.",
-        "Pour the brewed coffee into a large mug.",
-        "Add the hot chocolate milk to the coffee and stir well.",
-        "Top with whipped cream if desired.",
-        "Serve immediately and enjoy your mocha coffee!"
-      ],
-      "steps": [
-        "Brew coffee",
-        "Heat milk",
-        "Mix cocoa and sugar",
-        "Combine cocoa mixture with milk",
-        "Pour coffee into mug",
-        "Add chocolate milk to coffee",
-        "Top with whipped cream",
-        "Serve"
-      ],
-      "img": "https://coffeecopycat.com/wp-content/uploads/2024/01/MochaLatte-1200x1200-1.jpg",
-      "description": "This mocha coffee recipe is a delightful blend of rich coffee and smooth chocolate, perfect for a cozy evening or a quick pick-me-up."
-    }
 
     await request(app)
       .post('/recipes/create')
@@ -106,5 +107,12 @@ describe("Recipe API Endpoints test", () => {
       .expect(200);
 
     expect(resAfterDelete.body).to.be.an('array').that.is.empty;
+  })
+
+  it("Unauthorized create recipe attempt", async () => {
+    await request(app)
+      .post('/recipes/create')
+      .send(recipeData)
+      .expect(401);
   })
 })
