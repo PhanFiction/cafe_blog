@@ -22,6 +22,9 @@ exports.extractToken = (req, res, next) => {
 // Checks to make sure the blog creator matches the user id of who created the blog
 exports.checkBlogOwnerShip = async (req, res, next) => {
   const blogId = req.params.id;
+
+  if (!req.user) return res.status(401).json({ error: 'Not authorized' });
+
   const userId = req.user.id;
 
   const foundBlog = await blogDB.fetchBlogById(blogId);
@@ -31,20 +34,12 @@ exports.checkBlogOwnerShip = async (req, res, next) => {
   next();
 }
 
-// Checks to make sure the recipe creator matches the user id of who created the recipe
-exports.checkRecipeOwnership = async (req, res, next) => {
-  const recipeId = req.params.id;
-  const userId = req.user.id;
-  
-  const foundRecipe = await recipeDB.fetchSingleRecipe(recipeId);
-  if (foundRecipe.user_id !== userId) return res.status(403).json({ error: 'Forbidden' });
-  
-  next();
-}
-
 // Checks to make sure recipe creator matches the user id of who created the recipe
 exports.checkRecipeOwnership = async (req, res, next) => {
   const recipeId = req.params.id;
+  
+  if (!req.user) return res.status(401).json({ error: 'Not authorized' });
+  
   const userId = req.user.id;
 
   const foundRecipe = await recipeDB.fetchSingleRecipe(recipeId);
