@@ -65,7 +65,7 @@ exports.deleteRecipe = async (req, res) => {
   const { id } = req.params;
   try {
     const foundRecipe = await db.fetchSingleRecipe(id);
-    const imgObj = JSON.parse(foundRecipe.img);
+    const imgObj = foundRecipe.img;
     // Delete old image from cloudinary
     await cloudinaryService.deleteImg(imgObj.public_id);
     const deletedRecipe = await db.deleteRecipe(id);
