@@ -90,6 +90,19 @@ describe("Recipe API Endpoints test", () => {
     expect(res.body[0].steps).to.be.an('array').with.lengthOf(8);
   })
 
+  it("Unable to delete recipe without ownership", async () => {
+    const res = await request(app)
+      .get('/recipes')
+      .expect(200);
+
+    const recipeId = res.body[0].id;
+
+    // Clear cookies to simulate no authentication
+    await request(app)
+      .delete(`/recipes/${recipeId}`)
+      .expect(401);
+  })
+
   it('Delete recipe', async () => {
     const res = await request(app)
       .get('/recipes')
@@ -113,6 +126,19 @@ describe("Recipe API Endpoints test", () => {
     await request(app)
       .post('/recipes/create')
       .send(recipeData)
+      .expect(401);
+  })
+
+  it("Unauthorized update recipe attempt", async () => {
+    await request(app)
+      .put('/recipes/1')
+      .send(recipeData)
+      .expect(401);
+  })
+
+  it("Unauthorized delete recipe attempt", async () => {
+    await request(app)
+      .delete('/recipes/1')
       .expect(401);
   })
 })
